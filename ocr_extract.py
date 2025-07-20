@@ -1,9 +1,17 @@
-import easyocr
-from PIL import Image
+import requests
+import os
 
-reader = easyocr.Reader(['en'])  # Can add other languages like ['en', 'de']
-
-def extract_text_from_image(image_path: str) -> str:
-    """Extract text using EasyOCR instead of Tesseract."""
-    results = reader.readtext(image_path, detail=0)
-    return "\n".join(results)
+def extract_text_from_image(image_path):
+    api_key = os.getenv("OCR_SPACE_API_KEY", "helloworld")  # Replace with real key in production
+    with open(image_path, 'rb') as image_file:
+        response = requests.post(
+            'https://api.ocr.space/parse/image',
+            files={'filename': image_file},
+            data={
+                'apikey': api_key,
+                'language': 'eng',
+                'OCREngine': 2,
+            },
+        )
+    result = response.json()
+    return result['ParsedResults'][0]['ParsedText'] if result.get('ParsedResults') else ''
