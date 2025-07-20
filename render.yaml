@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: invoice-ocr-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "true"
+    plan: free
