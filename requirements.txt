@@ -4,3 +4,4 @@ torch
 Pillow
 requests
 gunicorn
+accelerate
