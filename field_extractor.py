@@ -5,17 +5,24 @@ model = None
 tokenizer = None
 
 def load_model():
+    """
+    Lazily loads the tokenizer and model with low CPU memory usage.
+    """
     global model, tokenizer
     if model is None or tokenizer is None:
-        model_source = "./t5_invoice_model"  # Load from local reduced model
+        model_source = "psabhay2003/t5_invoice_model"
 
         tokenizer = T5Tokenizer.from_pretrained(model_source)
         model = T5ForConditionalGeneration.from_pretrained(
             model_source,
-            torch_dtype=torch.float32
+            torch_dtype=torch.float32,
+            low_cpu_mem_usage=True  # ✅ reduces RAM usage when loading
         )
 
 def extract_invoice_fields(raw_text: str) -> dict:
+    """
+    Extracts structured invoice fields from raw OCR text using the fine-tuned T5 model.
+    """
     load_model()
 
     input_text = f"Extract invoice fields: {raw_text}"
@@ -28,6 +35,7 @@ def extract_invoice_fields(raw_text: str) -> dict:
         max_length=512
     )
 
+    # Generate model output
     output = model.generate(
         input_ids=inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
@@ -36,6 +44,7 @@ def extract_invoice_fields(raw_text: str) -> dict:
 
     decoded_output = tokenizer.decode(output[0], skip_special_tokens=True)
 
+    # Convert decoded string into dictionary
     result = {}
     for item in decoded_output.split(","):
         if ":" in item:
