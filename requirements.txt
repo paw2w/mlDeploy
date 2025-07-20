@@ -1,8 +1,6 @@
-flask
-torch
+Flask
 transformers
-sentencepiece
-pytesseract
+torch
 Pillow
+requests
 gunicorn
-easyocr
