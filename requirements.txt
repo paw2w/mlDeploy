@@ -1,8 +1,7 @@
-Flask
+flask
+gunicorn
 transformers
 torch
-Pillow
 requests
-gunicorn
-accelerate
+pillow
 sentencepiece
