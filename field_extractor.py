@@ -7,7 +7,7 @@ tokenizer = None
 def load_model():
     global model, tokenizer
     if model is None or tokenizer is None:
-        model_source = "psabhay2003/t5_invoice_model"
+        model_source = "./t5_invoice_model"  # Load from local reduced model
 
         tokenizer = T5Tokenizer.from_pretrained(model_source)
         model = T5ForConditionalGeneration.from_pretrained(
